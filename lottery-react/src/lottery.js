@@ -1,6 +1,6 @@
 import web3 from './web3';
 
-const address = '0x95a72A185a5D52f9CD226c05D1074B4d74Afb5B2';
+const address = '0x71b30c5C693E060623F7EF88CBDCc632A1789994';
 const abi = [
   {
     constant: true,
@@ -48,20 +48,12 @@ const abi = [
     type: 'function'
   },
   {
-    constant: true,
-    inputs: [],
-    name: 'lastWinner',
-    outputs: [{ name: '', type: 'address' }],
-    payable: false,
-    stateMutability: 'view',
-    type: 'function'
-  },
-  {
     inputs: [],
     payable: false,
     stateMutability: 'nonpayable',
     type: 'constructor'
   }
 ];
+
 
 export default new web3.eth.Contract(abi, address);

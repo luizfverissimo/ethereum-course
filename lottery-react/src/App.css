@@ -61,7 +61,7 @@ hr {
   border: 1px solid #394357;
   width: 100%;
   max-width: 600px;
-  margin: 32px 0;
+  margin-bottom: 32px;
 }
 
 input {
