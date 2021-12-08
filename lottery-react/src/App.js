@@ -1,18 +1,17 @@
 import { useEffect, useState } from 'react';
+import toast, { Toaster } from 'react-hot-toast';
 
 import web3 from './web3';
 import lottery from './lottery';
 
 import './App.css';
-import Spinner from './components/Spinner';
 
 function App() {
   const [manager, setManager] = useState('');
   const [players, setPlayers] = useState([]);
   const [balance, setBalance] = useState('');
   const [value, setValue] = useState(0);
-  const [isLoading, setIsLoading] = useState(false);
-  const [status, setStatus] = useState(null);
+  const [lastWinner, setLastWinner] = useState('');
 
   useEffect(() => {
     (async () => {
@@ -26,32 +25,61 @@ function App() {
         lottery.options.address
       );
       setBalance(balanceResponse);
+
+      const winner = await lottery.methods.lastWinner().call();
+      setLastWinner(winner);
     })();
   }, []);
 
   async function handleEnterLottery(event) {
-    setIsLoading(false);
     event.preventDefault();
 
     try {
-      setIsLoading(true);
-      setStatus('⏳ Waiting on transaction...');
       const accounts = await web3.eth.getAccounts();
 
-      await lottery.methods.enter().send({
+      const transaction = lottery.methods.enter().send({
         from: accounts[0],
         value: web3.utils.toWei(value, 'ether')
       });
-      setIsLoading(false);
-      setStatus('🎉 You have entered the lottery! Good luck!');
+
+      toast.promise(transaction, {
+        loading: 'Waiting on transaction...',
+        success: "🎉 You've entered the lottery!",
+        error: 'Something went wrong! Try again. 🙁'
+      });
     } catch (err) {
-      setIsLoading(false);
-      setStatus('❌ You have not entered the lottery. Try again!');
+      console.log(err);
+    }
+  }
+
+  async function handlePickWinner() {
+    const accounts = await web3.eth.getAccounts();
+
+    if (manager !== accounts[0]) {
+      toast.error('You are not the manager!')
+      return;
+    }
+    try {
+      const transaction = lottery.methods.pickWinner().send({
+        from: accounts[0]
+      });
+
+      await toast.promise(transaction, {
+        loading: 'Waiting on transaction...',
+        success: "🎉 A winner was picked!",
+        error: 'Something went wrong! Try again. 🙁'
+      });
+
+      const winner = await lottery.methods.lastWinner().call();
+      toast.success(`🎉 The winner is ${winner}!`);
+    } catch (err) {
+      console.log(err);
     }
   }
 
   return (
     <div className='App'>
+      <Toaster position='top-center' />
       <header className='App-header'>
         <h2>Lottery Contract</h2>
         <div className='container'>
@@ -65,11 +93,15 @@ function App() {
           </div>
         </div>
         <div className='container'>
+          <h3>🏆 Last Winner:</h3>
+          <p>{lastWinner}</p>
+        </div>
+        <div className='container'>
           <h3>Manager Address:</h3>
           <p>{manager}</p>
         </div>
         <hr />
-        <form onSubmit={(e) => handleEnterLottery(e)}>
+        <form onSubmit={handleEnterLottery}>
           <h4>Want to try your lucky? 🍀</h4>
           <div className='container'>
             <label>⤵️ Amount of ether to enter:</label>
@@ -81,9 +113,12 @@ function App() {
             />
           </div>
           <button type='submit'>Enter the lottery →</button>
-          {isLoading && <Spinner />}
-          {status && <p>{status}</p>}
         </form>
+        <hr />
+        <div className='container'>
+          <h4>Read to picky a winner?</h4>
+          <button onClick={handlePickWinner}>Pick a winner! 💰</button>
+        </div>
       </header>
     </div>
   );
