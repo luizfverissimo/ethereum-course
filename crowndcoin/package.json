@@ -9,7 +9,9 @@
     "daisyui": "^1.16.4",
     "next": "latest",
     "react": "^17.0.2",
-    "react-dom": "^17.0.2"
+    "react-dom": "^17.0.2",
+    "react-hot-toast": "^2.1.1",
+    "react-icons": "^4.3.1"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.0",
