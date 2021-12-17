@@ -25,9 +25,17 @@ export default function Home({ campaigns }) {
           </div>
         </div>
         <div className='flex flex-wrap justify-center w-full gap-10 my-8 xl:justify-between'>
+          {campaigns.length === 0 && (
+            <div className='flex flex-col items-center w-full'>
+              <h2 className='text-2xl text-gray-600'>No campaigns found 😢</h2>
+              <p className='text-lg text-gray-400'>
+                Create a new campaign to get started
+              </p>
+            </div>
+          )}
           {campaigns.map((campaign, index) => (
             <>
-            <CampaignCard key={index} campaign={campaign} />
+              <CampaignCard key={index} campaign={campaign} />
             </>
           ))}
         </div>

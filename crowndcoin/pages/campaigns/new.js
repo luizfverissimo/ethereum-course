@@ -30,7 +30,9 @@ function New() {
       });
 
       setIsLoading(false);
-      router.push('/');
+      setTimeout(() => {
+        router.push('/');
+      }, 3000);
     } catch (err) {
       console.log(err);
       setIsLoading(false);

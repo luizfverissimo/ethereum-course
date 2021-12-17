@@ -11,13 +11,14 @@ export function Navbar({ children }) {
           CrowdCoin
         </a>
         <div className='flex items-center gap-4'>
-          <button
+          <a
+          href='/'
             type='button'
             title='List all Campaigns available'
             className='btn btn-primary'
           >
             Campaigns
-          </button>
+          </a>
           <a
             href='/campaigns/new'
             type='button'
