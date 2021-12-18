@@ -64,7 +64,7 @@ function New() {
                   id='value'
                   required
                   placeholder='1000000'
-                  class='input input-primary input-bordered'
+                  className='input input-primary input-bordered'
                   type='number'
                   onChange={(e) => setMinimumValue(e.target.value)}
                   value={minimumValue}
@@ -73,7 +73,7 @@ function New() {
             </div>
             <button
               type='submit'
-              class='btn btn-primary uppercase gap-2'
+              className='gap-2 uppercase btn btn-primary'
               disabled={isLoading}
             >
               Create <BiRocket />

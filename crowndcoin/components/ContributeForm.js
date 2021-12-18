@@ -6,7 +6,7 @@ import { useRouter } from 'next/router';
 import web3 from '../ethereum/web3';
 import { getCampaign } from '../ethereum/campaign';
 
-export function ContributeForm({address}) {
+export function ContributeForm({ address }) {
   const [value, setValue] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -17,7 +17,7 @@ export function ContributeForm({address}) {
     setIsLoading(true);
 
     const campaign = await getCampaign(address);
-    
+
     try {
       const accounts = await web3.eth.getAccounts();
       const res = campaign.methods.contribute().send({
@@ -33,9 +33,9 @@ export function ContributeForm({address}) {
       });
 
       setIsLoading(false);
-      // setTimeout(() => {
-      //   router.push('/');
-      // }, 3000);
+      setTimeout(() => {
+        router.replace(`/campaigns/${address}`);
+      }, 2000);
     } catch (err) {
       console.log(err);
       setIsLoading(false);
@@ -50,6 +50,10 @@ export function ContributeForm({address}) {
         onSubmit={handleContribute}
       >
         <h3 className='mt-6 text-2xl text-primary'>Contribute</h3>
+        <p className='max-w-xs'>
+          Become a supporter of this project, you and other supporters can
+          control the usage of the money by approving the spending requests.
+        </p>
         <div className='form-control'>
           <label htmlFor='value' className='label'>
             <span className='label-text'>Contribution</span>
@@ -61,7 +65,7 @@ export function ContributeForm({address}) {
               required
               step={0.01}
               placeholder='1.0'
-              class='input input-primary input-bordered'
+              className='input input-primary input-bordered'
               type='number'
               onChange={(e) => setValue(e.target.value)}
               value={value}
@@ -70,7 +74,7 @@ export function ContributeForm({address}) {
         </div>
         <button
           type='submit'
-          class='btn btn-primary uppercase gap-2'
+          className='gap-2 uppercase btn btn-primary'
           disabled={isLoading}
         >
           Contribute! <BiRocket />
